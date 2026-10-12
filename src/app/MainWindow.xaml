@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="DiskForge.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid x:Name="RootGrid" RowSpacing="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- custom title bar -->
+        <Grid x:Name="AppTitleBar" Grid.Row="0" Height="32">
+            <StackPanel Orientation="Horizontal" Spacing="10" Margin="14,0,0,0" VerticalAlignment="Center">
+                <FontIcon Glyph="&#xE7C1;" FontSize="15" Foreground="{StaticResource AccentBarBrush}"/>
+                <TextBlock x:Name="AppTitleText"
+                           Text="DiskForge"
+                           Style="{StaticResource CaptionTextBlockStyle}"
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+
+        <NavigationView x:Name="NavView"
+                        Grid.Row="1"
+                        IsBackButtonVisible="Auto"
+                        IsTitleBarAutoPaddingEnabled="False"
+                        SelectionChanged="NavView_SelectionChanged"
+                        OpenPaneLength="228"
+                        PaneDisplayMode="Left">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="Dashboard" Tag="dashboard" Icon="Home" IsSelected="True"/>
+                <NavigationViewItemSeparator/>
+                <NavigationViewItem Content="Disk details" Tag="disk" Icon="HardDrive"/>
+                <NavigationViewItem Content="File recovery" Tag="recovery" Icon="Sync">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE8E5;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Partition recovery" Tag="partrecovery" Icon="Repair">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE90F;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItemSeparator/>
+                <NavigationViewItem Content="Operations" Tag="operations" Icon="AllApps">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE9D5;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Log" Tag="log" Icon="Repair">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE9F9;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Settings" Tag="settings" Icon="Setting"/>
+            </NavigationView.MenuItems>
+
+            <NavigationView.FooterMenuItems>
+                <NavigationViewItem Content="About DiskForge" Tag="about" Icon="Help"/>
+            </NavigationView.FooterMenuItems>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Frame x:Name="ContentFrame" Grid.Row="0"/>
+
+                <!-- global operation status bar -->
+                <Border x:Name="StatusBar" Grid.Row="1"
+                        Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="0,1,0,0"
+                        Padding="16,8"
+                        Visibility="Collapsed">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <ProgressRing x:Name="StatusRing" Grid.Column="0" Width="20" Height="20"
+                                      IsActive="True" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="StatusText" Grid.Column="1" VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis"/>
+                        <Button x:Name="CancelJobButton" Grid.Column="2" Content="Cancel"
+                                Click="CancelJobButton_Click"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </NavigationView>
+    </Grid>
+</Window>

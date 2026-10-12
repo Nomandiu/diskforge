@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DiskForge", "src\app\DiskForge.vcxproj", "{8C5B9C4A-1F2D-4E6B-9A7C-3D2E5F607181}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8C5B9C4A-1F2D-4E6B-9A7C-3D2E5F607181}.Debug|x64.ActiveCfg = Debug|x64
+		{8C5B9C4A-1F2D-4E6B-9A7C-3D2E5F607181}.Debug|x64.Build.0 = Debug|x64
+		{8C5B9C4A-1F2D-4E6B-9A7C-3D2E5F607181}.Release|x64.ActiveCfg = Release|x64
+		{8C5B9C4A-1F2D-4E6B-9A7C-3D2E5F607181}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D7A5C9E2-3B4F-4A8C-9E1D-5F6071828C5B}
+	EndGlobalSection
+EndGlobal

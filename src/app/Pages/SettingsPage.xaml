@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="DiskForge.Pages.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ScrollViewer>
+        <StackPanel Margin="28,20,28,28" Spacing="14" MaxWidth="900" HorizontalAlignment="Left">
+
+            <TextBlock Text="Settings" Style="{StaticResource SectionHeaderText}"/>
+
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="14">
+                    <TextBlock Text="Appearance" FontWeight="SemiBold" FontSize="15"/>
+                    <RadioButton x:Name="ThemeSystem" Content="Follow Windows theme" GroupName="theme"
+                                 Checked="Theme_Checked"/>
+                    <RadioButton x:Name="ThemeLight" Content="Light" GroupName="theme" Checked="Theme_Checked"/>
+                    <RadioButton x:Name="ThemeDark" Content="Dark" GroupName="theme" Checked="Theme_Checked"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="14">
+                    <TextBlock Text="Safety" FontWeight="SemiBold" FontSize="15"/>
+                    <ToggleSwitch x:Name="ReadOnlyToggle" Header="Read-only mode (view disks, block all changes)"
+                                  OnContent="On" OffContent="Off"
+                                  Toggled="ReadOnlyToggle_Toggled"/>
+                    <ToggleSwitch x:Name="ConfirmToggle" Header="Confirm destructive operations"
+                                  OnContent="On" OffContent="Off"
+                                  Toggled="ConfirmToggle_Toggled"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="14">
+                    <TextBlock Text="Performance" FontWeight="SemiBold" FontSize="15"/>
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <TextBlock Text="Copy chunk size:" VerticalAlignment="Center"/>
+                        <ComboBox x:Name="ChunkCombo" SelectedIndex="1" MinWidth="130"
+                                  SelectionChanged="ChunkCombo_SelectionChanged">
+                            <ComboBoxItem Content="4 MiB"/>
+                            <ComboBoxItem Content="8 MiB"/>
+                            <ComboBoxItem Content="16 MiB"/>
+                            <ComboBoxItem Content="32 MiB"/>
+                            <ComboBoxItem Content="64 MiB"/>
+                        </ComboBox>
+                        <TextBlock Text="(larger = faster on SSDs, more memory)" Opacity="0.6" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource CardStyle}">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="About" FontWeight="SemiBold" FontSize="15"/>
+                    <TextBlock Text="DiskForge — Partition &amp; Recovery Suite" FontWeight="SemiBold"/>
+                    <TextBlock Text="Version 1.0.0  •  C++ / WinUI 3  •  MIT License" Opacity="0.7"/>
+                    <TextBlock Text="Engine: platform-independent MBR/GPT/NTFS/FAT32 core, verified by 51 unit tests and a Windows VHD integration suite."
+                               Opacity="0.7" TextWrapping="Wrap"/>
+                    <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,6,0,0">
+                        <Button Content="GitHub repository" Click="RepoButton_Click"/>
+                        <Button Content="View log" Click="ViewLogButton_Click"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>

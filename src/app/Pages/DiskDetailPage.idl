@@ -1,0 +1,9 @@
+namespace DiskForge.Pages
+{
+    [default_interface]
+    runtimeclass DiskDetailPage : Microsoft.UI.Xaml.Controls.Page
+    {
+        DiskDetailPage();
+        void Reload();
+    }
+}

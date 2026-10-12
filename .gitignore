@@ -1,0 +1,18 @@
+# Build artifacts
+build/
+build-*/
+dist/
+obj/
+packages/
+src/app/packages/
+*.user
+*.aps
+.vs/
+.vscode/
+.idea/
+*.pdb
+*.log
+
+# test leftovers
+*.img
+*.vhdx

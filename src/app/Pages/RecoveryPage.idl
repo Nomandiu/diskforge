@@ -1,0 +1,8 @@
+namespace DiskForge.Pages
+{
+    [default_interface]
+    runtimeclass RecoveryPage : Microsoft.UI.Xaml.Controls.Page
+    {
+        RecoveryPage();
+    }
+}

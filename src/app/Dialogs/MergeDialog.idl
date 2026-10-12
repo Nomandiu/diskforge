@@ -1,0 +1,8 @@
+namespace DiskForge.Dialogs
+{
+    [default_interface]
+    runtimeclass MergeDialog : Microsoft.UI.Xaml.Controls.UserControl
+    {
+        MergeDialog();
+    }
+}

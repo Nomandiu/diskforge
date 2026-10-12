@@ -1,0 +1,10 @@
+namespace DiskForge
+{
+    [default_interface]
+    runtimeclass MainWindow : Microsoft.UI.Xaml.Window
+    {
+        MainWindow();
+        void NavigateToDisk(Int32 diskNumber);
+        Microsoft.UI.Xaml.XamlRoot ContentRoot();
+    }
+}

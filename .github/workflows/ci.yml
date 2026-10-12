@@ -1,0 +1,165 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  engine-tests:
+    name: Engine unit tests (Ubuntu)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build -j "$(nproc)"
+
+      - name: Test
+        working-directory: build
+        run: ctest --output-on-failure
+
+  windows:
+    name: Build + full test + release (Windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: microsoft/setup-msbuild@v2
+
+      - name: Pin NuGet versions to latest stable
+        shell: pwsh
+        run: ./tools/set-nuget-versions.ps1
+
+      - name: Restore NuGet packages
+        shell: pwsh
+        run: |
+          nuget restore DiskForge.sln -PackagesDirectory src/app/packages
+          if ($LASTEXITCODE -ne 0) {
+            msbuild DiskForge.sln -t:Restore -p:RestorePackagesConfig=true -p:Configuration=Release -p:Platform=x64
+          }
+
+      - name: Build app (Release x64)
+        run: msbuild DiskForge.sln -m -p:Configuration=Release -p:Platform=x64 -verbosity:minimal
+
+      - name: Build + run engine unit tests (Windows)
+        shell: pwsh
+        run: |
+          cmake -S . -B build-engine -DCMAKE_BUILD_TYPE=Release | Out-Null
+          cmake --build build-engine --config Release | Out-Null
+          cd build-engine
+          ctest -C Release --output-on-failure
+          if ($LASTEXITCODE -ne 0) { throw "engine unit tests failed" }
+
+      - name: App smoke test
+        shell: pwsh
+        run: |
+          $exe = "build/x64/Release/DiskForge/DiskForge.exe"
+          if (-not (Test-Path $exe)) { $exe = "src/app/x64/Release/DiskForge/DiskForge.exe" }
+          if (-not (Test-Path $exe)) { throw "DiskForge.exe not found" }
+          Write-Host "Smoke launch: $exe"
+          $p = Start-Process -FilePath $exe -PassThru
+          Start-Sleep -Seconds 8
+          if ($p.HasExited) {
+            throw "app exited prematurely with code $($p.ExitCode)"
+          }
+          Stop-Process -Id $p.Id -Force
+          Write-Host "Smoke test OK (window stayed alive 8s)"
+
+      - name: Integration test on real VHDs
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          New-Item -ItemType Directory -Path C:\df-test | Out-Null
+
+          function Test-Vhd([string]$vhdPath, [int64]$sizeMB, [bool]$mbr) {
+            $script = @"
+create vdisk file="$vhdPath" maximum=$sizeMB type=fixed
+select vdisk file="$vhdPath"
+attach vdisk
+"@
+            $scriptFile = "$vhdPath.txt"
+            Set-Content -Path $scriptFile -Value $script
+            diskpart /s $scriptFile | Out-Null
+            if ($LASTEXITCODE -ne 0) { throw "diskpart create failed for $vhdPath" }
+            # find the disk number (File Backed Virtual)
+            $disk = Get-Disk | Where-Object BusType -eq 'File Backed Virtual' | Sort-Object Number | Select-Object -Last 1
+            if (-not $disk) { throw "VHD disk not found" }
+            $diskNumber = $disk.Number
+            Write-Host "=== integration on PhysicalDrive$diskNumber (MBR=$mbr) ==="
+
+            # run the integration suite (GPT flow; MBR disks exercise set-active/hide via engine unit paths)
+            $tester = "build-engine/Release/df-tests.exe"
+            & $tester --integration "\\.\PhysicalDrive$diskNumber"
+            if ($LASTEXITCODE -ne 0) { throw "integration test failed" }
+
+            # detach + cleanup
+            $cleanup = @"
+select vdisk file="$vhdPath"
+detach vdisk
+"@
+            Set-Content -Path $scriptFile -Value $cleanup
+            diskpart /s $scriptFile | Out-Null
+          }
+
+          Test-Vhd -vhdPath "C:\df-test\test1.vhdx" -sizeMB 512 -mbr $false
+          Write-Host "ALL INTEGRATION TESTS PASSED"
+
+      - name: Package portable zip
+        shell: pwsh
+        run: |
+          $exeDir = "build/x64/Release/DiskForge"
+          if (-not (Test-Path "$exeDir/DiskForge.exe")) { $exeDir = "src/app/x64/Release/DiskForge" }
+          ./tools/build-portable.ps1 -BuildDir $exeDir -OutZip "dist/DiskForge-1.0.0-win-x64.zip"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: DiskForge-1.0.0-win-x64
+          path: dist/DiskForge-1.0.0-win-x64.zip
+
+      - name: Publish GitHub Release
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = "v1.0.0"
+          $notes = @"
+          DiskForge v1.0.0 — Partition & Recovery Suite (portable)
+
+          **Requirements:** Windows 10 19041+ / Windows 11, x64, Administrator rights (the app elevates automatically).
+
+          **How to use:** download the zip, extract, right-click DiskForge.exe -> Run as administrator (or just run it; UAC will prompt).
+
+          Features: full partition management (create/delete/format/resize/extend/shrink/move/split/merge, labels, letters, active, hide, type IDs, allocate free space, 1-click extend) plus data recovery (deleted files from NTFS/FAT32, lost partition scanning + restore, signature carving for documents/photos/videos/archives).
+
+          SHA-256 in the release checksums.txt.
+          "@
+
+          $existing = gh release view $tag --json tagName 2>$null
+          if (-not $existing) {
+            gh release create $tag "dist/DiskForge-1.0.0-win-x64.zip" --title "DiskForge v1.0.0" --notes "$notes" --latest
+          } else {
+            gh release upload $tag "dist/DiskForge-1.0.0-win-x64.zip" --clobber
+          }
+
+      - name: Compute checksum
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        shell: pwsh
+        run: |
+          $hash = (Get-FileHash "dist/DiskForge-1.0.0-win-x64.zip" -Algorithm SHA256).Hash
+          "$hash  DiskForge-1.0.0-win-x64.zip" | Out-File dist/checksums.txt -Encoding ascii
+          $env:GH_TOKEN = ${{ github.token }}
+          gh release upload v1.0.0 dist/checksums.txt --clobber

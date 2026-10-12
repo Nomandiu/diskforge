@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="DiskForge.Dialogs.CreatePartitionDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Spacing="12" MinWidth="460">
+        <TextBlock x:Name="RangeText" Opacity="0.7" TextWrapping="Wrap"/>
+
+        <TextBlock Text="Size (MiB)"/>
+        <Grid ColumnSpacing="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="150"/>
+            </Grid.ColumnDefinitions>
+            <Slider x:Name="SizeSlider" Grid.Column="0" Minimum="16" Maximum="1024"
+                    ValueChanged="SizeSlider_ValueChanged"/>
+            <NumberBox x:Name="SizeBox" Grid.Column="1" Value="1024" Minimum="16" Maximum="99999999"
+                       SpinButtonPlacementMode="Compact" ValueChanged="SizeBox_ValueChanged"/>
+        </Grid>
+
+        <TextBlock x:Name="FsLabel" Text="File system"/>
+        <ComboBox x:Name="FsCombo" SelectedIndex="0" MinWidth="160">
+            <ComboBoxItem Content="NTFS"/>
+            <ComboBoxItem Content="FAT32"/>
+            <ComboBoxItem Content="exFAT"/>
+            <ComboBoxItem Content="Leave unformatted"/>
+        </ComboBox>
+
+        <TextBlock Text="Volume label"/>
+        <TextBox x:Name="LabelBox" PlaceholderText="optional" MaxLength="32"/>
+
+        <TextBlock Text="Drive letter (A-Z, blank = automatic)"/>
+        <TextBox x:Name="LetterBox" MaxLength="1" PlaceholderText="auto"/>
+    </StackPanel>
+</UserControl>

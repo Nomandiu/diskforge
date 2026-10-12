@@ -1,0 +1,105 @@
+// DiskForge view models (runtime classes for x:Bind)
+namespace DiskForge.VMs
+{
+    runtimeclass DiskVM
+    {
+        DiskVM();
+        Int32 Number;
+        String Title;
+        String Detail;
+        String SizeText;
+        String BusText;
+        String StyleText;
+        String ModelText;
+        String SerialText;
+        Int32 PartitionCount;
+        Boolean IsSsd;
+        Boolean IsRemovable;
+        Boolean IsReadOnly;
+        Boolean IsSystemDisk;
+        Microsoft.UI.Xaml.Visibility SystemVis;
+    }
+
+    runtimeclass PartitionVM
+    {
+        PartitionVM();
+        String Title;          // "Windows (C:)" / "Data (D:)" / "Unallocated"
+        String Subtitle;       // "NTFS — 128.00 GiB"
+        String SizeText;
+        String UsedText;
+        String FsText;
+        String KindText;
+        String LetterText;     // "(C:)" or ""
+        String StartText;
+        Double UsedFraction;   // 0..1
+        Microsoft.UI.Xaml.Media.Brush FillBrush;
+        Boolean IsUnallocated;
+        Boolean HasLetter;
+        Boolean IsSystem;
+        Boolean IsEsp;
+        Int64 StartLba;
+        Int64 Sectors;
+        Microsoft.UI.Xaml.Visibility UsedBarVis;
+        Microsoft.UI.Xaml.Visibility LetterVis;
+    }
+
+    runtimeclass FileVM
+    {
+        FileVM();
+        String Name;
+        String Path;
+        String SizeText;
+        String Category;
+        String TypeName;
+        Boolean Deleted;
+        Boolean Carved;
+        Boolean Orphaned;
+        Boolean SizeEstimated;
+        Int32 Index;           // index into engine hit list
+        Microsoft.UI.Xaml.Visibility DeletedVis;
+        Microsoft.UI.Xaml.Visibility BadgeVis;
+        String Glyph;
+    }
+
+    runtimeclass OperationVM
+    {
+        OperationVM();
+        String Title;
+        String Target;
+        String Status;
+        String Detail;
+        Int32 State;           // 0 pending, 1 running, 2 done, 3 failed, 4 canceled
+        Boolean IsPending;
+        Boolean IsRunning;
+        Boolean IsDone;
+        Boolean IsFailed;
+        Microsoft.UI.Xaml.Visibility RunningVis;
+        Microsoft.UI.Xaml.Visibility DoneVis;
+        Microsoft.UI.Xaml.Visibility FailedVis;
+    }
+
+    runtimeclass LostPartitionVM
+    {
+        LostPartitionVM();
+        String PositionText;
+        String SizeText;
+        String FsText;
+        String LabelText;
+        String EvidenceText;
+        Double Confidence;     // 0..1
+        String ConfidenceText;
+        Boolean Overlaps;
+        Int64 StartLba;
+        Int64 Sectors;
+        Microsoft.UI.Xaml.Visibility OverlapVis;
+    }
+
+    runtimeclass LogEntryVM
+    {
+        LogEntryVM();
+        String TimeText;
+        String LevelText;
+        String Message;
+        Int32 Level;           // 0 info 1 warning 2 error
+    }
+}

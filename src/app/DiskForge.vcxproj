@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- WinAppSDK + BuildTools props (paths updated by tools/set-nuget-versions.ps1) -->
+  <Import Project="packages\Microsoft.WindowsAppSDK.1.6.241114003\build\Microsoft.WindowsAppSDK.props" Condition="Exists('packages\Microsoft.WindowsAppSDK.1.6.241114003\build\Microsoft.WindowsAppSDK.props')" />
+  <Import Project="packages\Microsoft.Windows.SDK.BuildTools.10.0.26100.1742\build\Microsoft.Windows.SDK.BuildTools.props" Condition="Exists('packages\Microsoft.Windows.SDK.BuildTools.10.0.26100.1742\build\Microsoft.Windows.SDK.BuildTools.props')" />
+
+  <PropertyGroup Label="Globals">
+    <CppWinRTOptimized>false</CppWinRTOptimized>
+    <CppWinRTRootNamespaceAutoMerge>false</CppWinRTRootNamespaceAutoMerge>
+    <MinimalCoreWin>true</MinimalCoreWin>
+    <ProjectGuid>{8C5B9C4A-1F2D-4E6B-9A7C-3D2E5F607181}</ProjectGuid>
+    <ProjectSystemName>Default</ProjectSystemName>
+    <Keyword>WinUIProj</Keyword>
+    <RootNamespace>DiskForge</RootNamespace>
+    <ApplicationType>Windows Store</ApplicationType>
+    <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <TargetPlatformVersion>10.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <UseWinUI>true</UseWinUI>
+    <EnableMsixTooling>true</EnableMsixTooling>
+    <WindowsPackageType>None</WindowsPackageType>
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <AppxPackage>false</AppxPackage>
+    <Platform Condition="'$(Platform)' == ''">x64</Platform>
+    <PlatformTarget>$(Platform)</PlatformTarget>
+    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+    <CharacterSet>Unicode</CharacterSet>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+    <OutDir>$(SolutionDir)build\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)build\obj\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</IntDir>
+    <GeneratedFilesDir>$(IntDir)Generated Files\</GeneratedFilesDir>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseDebugLibraries Condition="'$(Configuration)'=='Debug'">true</UseDebugLibraries>
+    <UseDebugLibraries Condition="'$(Configuration)'=='Release'">false</UseDebugLibraries>
+    <WholeProgramOptimization Condition="'$(Configuration)'=='Release'">true</WholeProgramOptimization>
+    <LinkIncremental Condition="'$(Configuration)'=='Debug'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)'=='Release'">false</LinkIncremental>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="packages\Microsoft.Windows.CppWinRT.2.0.240111.5\build\native\Microsoft.Windows.CppWinRT.props" Condition="Exists('packages\Microsoft.Windows.CppWinRT.2.0.240111.5\build\native\Microsoft.Windows.CppWinRT.props')" />
+  </ImportGroup>
+
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+
+  <PropertyGroup Label="UserMacros" />
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
+      <WarningLevel>Level4</WarningLevel>
+      <AdditionalOptions>%(AdditionalOptions) /bigobj /utf-8</AdditionalOptions>
+      <DisableSpecificWarnings>4453;28204;5205;4996</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)Pages;$(ProjectDir)Dialogs;$(ProjectDir)ViewModels;$(ProjectDir)Services;$(SolutionDir)src\engine;$(GeneratedFilesDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation Condition="'$(Configuration)'=='Release'">false</GenerateDebugInformation>
+      <EnableCOMDATFolding Condition="'$(Configuration)'=='Release'">true</EnableCOMDATFolding>
+      <OptimizeReferences Condition="'$(Configuration)'=='Release'">true</OptimizeReferences>
+      <AdditionalDependencies>ole32.lib;comctl32.lib;shell32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Manifest>
+      <AdditionalManifestFiles>app.manifest</AdditionalManifestFiles>
+    </Manifest>
+  </ItemDefinitionGroup>
+
+  <ItemGroup>
+    <!-- app entry -->
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="App.cpp" />
+    <ClCompile Include="MainWindow.cpp" />
+
+    <!-- pages -->
+    <ClCompile Include="Pages\DashboardPage.cpp" />
+    <ClCompile Include="Pages\DiskDetailPage.cpp" />
+    <ClCompile Include="Pages\LogPage.cpp" />
+    <ClCompile Include="Pages\OperationsPage.cpp" />
+    <ClCompile Include="Pages\PartitionRecoveryPage.cpp" />
+    <ClCompile Include="Pages\RecoveryPage.cpp" />
+    <ClCompile Include="Pages\SettingsPage.cpp" />
+
+    <!-- dialogs -->
+    <ClCompile Include="Dialogs\AllocateDialog.cpp" />
+    <ClCompile Include="Dialogs\CreatePartitionDialog.cpp" />
+    <ClCompile Include="Dialogs\MergeDialog.cpp" />
+    <ClCompile Include="Dialogs\ResizeMoveDialog.cpp" />
+    <ClCompile Include="Dialogs\SplitDialog.cpp" />
+
+    <!-- services + view models -->
+    <ClCompile Include="Services\AppContext.cpp" />
+    <ClCompile Include="Services\UiHelpers.cpp" />
+    <ClCompile Include="ViewModels\ViewModels.cpp" />
+
+    <!-- engine (compiled directly into the app) -->
+    <ClCompile Include="..\engine\df\common.cpp" />
+    <ClCompile Include="..\engine\df\crc32.cpp" />
+    <ClCompile Include="..\engine\df\guid.cpp" />
+    <ClCompile Include="..\engine\df\units.cpp" />
+    <ClCompile Include="..\engine\df\diskio.cpp" />
+    <ClCompile Include="..\engine\df\diskio_win.cpp" />
+    <ClCompile Include="..\engine\df\mbr.cpp" />
+    <ClCompile Include="..\engine\df\gpt.cpp" />
+    <ClCompile Include="..\engine\df\layout.cpp" />
+    <ClCompile Include="..\engine\df\fsprobe.cpp" />
+    <ClCompile Include="..\engine\df\fat.cpp" />
+    <ClCompile Include="..\engine\df\ntfs.cpp" />
+    <ClCompile Include="..\engine\df\carve.cpp" />
+    <ClCompile Include="..\engine\df\scan.cpp" />
+    <ClCompile Include="..\engine\df\ops_win.cpp" />
+
+    <!-- headers -->
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="App.h" />
+    <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="Pages\DashboardPage.h" />
+    <ClInclude Include="Pages\DiskDetailPage.h" />
+    <ClInclude Include="Pages\LogPage.h" />
+    <ClInclude Include="Pages\OperationsPage.h" />
+    <ClInclude Include="Pages\PartitionRecoveryPage.h" />
+    <ClInclude Include="Pages\RecoveryPage.h" />
+    <ClInclude Include="Pages\SettingsPage.h" />
+    <ClInclude Include="Dialogs\AllocateDialog.h" />
+    <ClInclude Include="Dialogs\CreatePartitionDialog.h" />
+    <ClInclude Include="Dialogs\MergeDialog.h" />
+    <ClInclude Include="Dialogs\ResizeMoveDialog.h" />
+    <ClInclude Include="Dialogs\SplitDialog.h" />
+    <ClInclude Include="Services\AppContext.h" />
+    <ClInclude Include="Services\UiHelpers.h" />
+    <ClInclude Include="ViewModels\ViewModels.h" />
+    <ClInclude Include="resource.h" />
+
+    <!-- XAML -->
+    <ApplicationDefinition Include="App.xaml">
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\DashboardPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\DiskDetailPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\LogPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\OperationsPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\PartitionRecoveryPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\RecoveryPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\SettingsPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\AllocateDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\CreatePartitionDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\MergeDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\ResizeMoveDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\SplitDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+
+    <!-- MIDL (IDL files for authored runtime classes) -->
+    <Midl Include="App.idl" />
+    <Midl Include="MainWindow.idl" />
+    <Midl Include="Pages\DashboardPage.idl" />
+    <Midl Include="Pages\DiskDetailPage.idl" />
+    <Midl Include="Pages\LogPage.idl" />
+    <Midl Include="Pages\OperationsPage.idl" />
+    <Midl Include="Pages\PartitionRecoveryPage.idl" />
+    <Midl Include="Pages\RecoveryPage.idl" />
+    <Midl Include="Pages\SettingsPage.idl" />
+    <Midl Include="Dialogs\AllocateDialog.idl" />
+    <Midl Include="Dialogs\CreatePartitionDialog.idl" />
+    <Midl Include="Dialogs\MergeDialog.idl" />
+    <Midl Include="Dialogs\ResizeMoveDialog.idl" />
+    <Midl Include="Dialogs\SplitDialog.idl" />
+    <Midl Include="ViewModels\ViewModels.idl" />
+
+    <!-- resources -->
+    <ResourceCompile Include="app.rc" />
+    <Image Include="Assets\app.ico" />
+    <None Include="packages.config" />
+    <None Include="app.manifest" />
+  </ItemGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="packages\Microsoft.Windows.CppWinRT.2.0.240111.5\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('packages\Microsoft.Windows.CppWinRT.2.0.240111.5\build\native\Microsoft.Windows.CppWinRT.targets')" />
+    <Import Project="packages\Microsoft.WindowsAppSDK.1.6.241114003\build\Microsoft.WindowsAppSDK.targets" Condition="Exists('packages\Microsoft.WindowsAppSDK.1.6.241114003\build\Microsoft.WindowsAppSDK.targets')" />
+    <Import Project="packages\Microsoft.Windows.SDK.BuildTools.10.0.26100.1742\build\Microsoft.Windows.SDK.BuildTools.targets" Condition="Exists('packages\Microsoft.Windows.SDK.BuildTools.10.0.26100.1742\build\Microsoft.Windows.SDK.BuildTools.targets')" />
+  </ImportGroup>
+
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Run "tools\set-nuget-versions.ps1" then "nuget restore DiskForge.sln" (or msbuild -t:Restore -p:RestorePackagesConfig=true). For more information, see https://go.microsoft.com/fwlink/?LinkID=322105.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\Microsoft.Windows.CppWinRT.2.0.240111.5\build\native\Microsoft.Windows.CppWinRT.props')" Text="$(ErrorText)" />
+    <Error Condition="!Exists('packages\Microsoft.Windows.CppWinRT.2.0.240111.5\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$(ErrorText)" />
+    <Error Condition="!Exists('packages\Microsoft.WindowsAppSDK.1.6.241114003\build\Microsoft.WindowsAppSDK.props')" Text="$(ErrorText)" />
+    <Error Condition="!Exists('packages\Microsoft.WindowsAppSDK.1.6.241114003\build\Microsoft.WindowsAppSDK.targets')" Text="$(ErrorText)" />
+    <Error Condition="!Exists('packages\Microsoft.Windows.SDK.BuildTools.10.0.26100.1742\build\Microsoft.Windows.SDK.BuildTools.props')" Text="$(ErrorText)" />
+    <Error Condition="!Exists('packages\Microsoft.Windows.SDK.BuildTools.10.0.26100.1742\build\Microsoft.Windows.SDK.BuildTools.targets')" Text="$(ErrorText)" />
+  </Target>
+
+</Project>

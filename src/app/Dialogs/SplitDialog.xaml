@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="DiskForge.Dialogs.SplitDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Spacing="12" MinWidth="480">
+        <TextBlock x:Name="InfoText" Opacity="0.75" TextWrapping="Wrap"/>
+        <TextBlock Text="Keep for the original partition (MiB) — the remainder becomes a new partition"/>
+        <Grid ColumnSpacing="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="150"/>
+            </Grid.ColumnDefinitions>
+            <Slider x:Name="KeepSlider" Grid.Column="0" Minimum="16" Maximum="1024"
+                    ValueChanged="KeepSlider_ValueChanged"/>
+            <NumberBox x:Name="KeepBox" Grid.Column="1" Value="1024" Minimum="16" Maximum="99999999"
+                       SpinButtonPlacementMode="Compact" ValueChanged="KeepBox_ValueChanged"/>
+        </Grid>
+        <TextBlock x:Name="NewSizeText" FontWeight="SemiBold"/>
+        <TextBlock Text="New partition file system"/>
+        <ComboBox x:Name="FsCombo" SelectedIndex="0" MinWidth="160">
+            <ComboBoxItem Content="NTFS"/>
+            <ComboBoxItem Content="FAT32"/>
+            <ComboBoxItem Content="exFAT"/>
+            <ComboBoxItem Content="Leave unformatted"/>
+        </ComboBox>
+        <TextBlock Text="New partition label"/>
+        <TextBox x:Name="LabelBox" PlaceholderText="optional" MaxLength="32"/>
+    </StackPanel>
+</UserControl>

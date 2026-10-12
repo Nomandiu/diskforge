@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="DiskForge.Dialogs.AllocateDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Spacing="12" MinWidth="520">
+        <TextBlock x:Name="InfoText" Opacity="0.75" TextWrapping="Wrap"/>
+        <TextBlock Text="Take space from (donor partition):"/>
+        <ComboBox x:Name="DonorCombo" MinWidth="380" HorizontalAlignment="Left"
+                  SelectionChanged="DonorCombo_SelectionChanged"/>
+        <TextBlock Text="Amount to move (MiB)"/>
+        <Grid ColumnSpacing="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="150"/>
+            </Grid.ColumnDefinitions>
+            <Slider x:Name="AmountSlider" Grid.Column="0" Minimum="16" Maximum="1024"
+                    ValueChanged="AmountSlider_ValueChanged"/>
+            <NumberBox x:Name="AmountBox" Grid.Column="1" Value="1024" Minimum="16" Maximum="99999999"
+                       SpinButtonPlacementMode="Compact" ValueChanged="AmountBox_ValueChanged"/>
+        </Grid>
+        <InfoBar x:Name="MoveWarn" IsOpen="False" Severity="Warning"
+                 Message="Moving free space may require moving partitions in between — this copies data and can take a while."/>
+    </StackPanel>
+</UserControl>

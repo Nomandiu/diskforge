@@ -1,0 +1,8 @@
+namespace DiskForge.Dialogs
+{
+    [default_interface]
+    runtimeclass SplitDialog : Microsoft.UI.Xaml.Controls.UserControl
+    {
+        SplitDialog();
+    }
+}
